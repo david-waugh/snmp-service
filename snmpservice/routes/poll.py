@@ -1,4 +1,4 @@
-from snmpservice.utils.models.polling import DefaultStrategyModel
+from snmpservice.polling.strategies.default import DefaultStrategyModel
 from snmpservice.utils.exceptions import *
 from snmpservice.settings import settings
 from snmpservice.utils.logger import logger

@@ -11,6 +11,11 @@ from pysnmp.hlapi import SnmpEngine
 
 from threading import Thread
 
+# 
+# NOTE: For this to function correctly, you must 
+# pip3 install pysnmp-mibs
+#
+
 def dispatch_trap_receiver(*, ip: str, port: int, community: str):
     """
     Spawns a daemon thread listening on given ip/port for SNMP traps using given community.
@@ -21,7 +26,7 @@ def dispatch_trap_receiver(*, ip: str, port: int, community: str):
     community : str : SNMPv1/2c community string.
     """
 
-    async def _callback(
+    def _callback(
             snmp_engine:SnmpEngine, 
             state_reference:int, 
             context_engine_id, 
@@ -29,7 +34,7 @@ def dispatch_trap_receiver(*, ip: str, port: int, community: str):
             var_binds, 
             callback_context:None
         ) -> None:
-        def numeric_to_lexical_oid(snmp_engine: SnmpEngine, oid) -> str:
+        def numeric_to_lexical_oid(oid) -> str:
             """
             Attempts to translate OID to the human-friendly representation.
             e.g. 1.3.6.1.2.1.1.2 -> sysObjectID
@@ -47,7 +52,6 @@ def dispatch_trap_receiver(*, ip: str, port: int, community: str):
         peer_address, _ = exec_context["transportAddress"]
 
         logger.debug(f"Recieved SNMP notification from {peer_address}")
-
         # Translate numeric OIDs to human-friendly textual OIDs
         for name, val in var_binds:
             trap[numeric_to_lexical_oid(name)] = numeric_to_lexical_oid(val)
@@ -57,7 +61,7 @@ def dispatch_trap_receiver(*, ip: str, port: int, community: str):
         if parser:
             parsed_trap_data = parser().parse(peer_address, trap) 
             if parsed_trap_data:
-                return await trap_datastore.store_trap(peer_address, parsed_trap_data)
+                return trap_datastore.store_trap(peer_address, parsed_trap_data)
 
         # No data stored.
         return None

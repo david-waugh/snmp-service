@@ -10,13 +10,9 @@ from fastapi.responses import PlainTextResponse
 from os import _exit
 
 app = FastAPI(
-    title="Visualisation DataService",
+    title="Visualisation snmp-service",
     docs_url="/docs", redoc_url=None
 )
-
-app.include_router(poll.router)
-app.include_router(subscribe.router)
-app.include_router(traps.router)
 
 @app.on_event('startup')
 def setup():
@@ -38,6 +34,9 @@ def setup():
         _exit(0) # Hacky way to make multi-threaded process terminate.
     logger.info("TrapEngine setup complete.")
 
+app.include_router(poll.router)
+app.include_router(subscribe.router)
+app.include_router(traps.router)
 
 @app.get('/debug')
 def debug_endpoint():
