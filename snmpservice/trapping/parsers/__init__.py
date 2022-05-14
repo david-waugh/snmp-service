@@ -1,5 +1,6 @@
 from snmpservice.trapping.parsers.base import BaseTrapParser
 from snmpservice.trapping.parsers.link import *
+from inspect import isclass
 
 def get_parser_for_trap(trap: str) -> BaseTrapParser | None:
     """
@@ -8,8 +9,8 @@ def get_parser_for_trap(trap: str) -> BaseTrapParser | None:
 
     Returns class if found, else None.
     """
-    for var in globals():
-        if issubclass(var, BaseTrapParser):
+    for var in globals().values():
+        if isclass(var) and issubclass(var, BaseTrapParser):
             if var.__name__.lower() == trap.lower():
                 return var
     return None

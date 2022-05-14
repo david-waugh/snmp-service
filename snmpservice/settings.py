@@ -6,17 +6,19 @@ from pydantic import BaseSettings
 # editing the source code (this bit specifically) to modify the operational
 # settings of the snmp-service. 
 
+# This does also require a re-install of the package to change the settings... oops. pip3 install .
+
 class Settings(BaseSettings):
     # =================================
     # App Info
     # =================================
-    app_name: str = "Visualisation DataService"
+    app_name: str = "Visualisation snmp-service"
     app_contact_email: str = "david@dawaugh.co.uk"
 
     # =================================
     # SNMP Trap Server Config
     # =================================
-    snmp_trap_ip: str = "192.168.0.22"#"172.16.98.1"
+    snmp_trap_ip: str = "127.0.0.1"
     snmp_trap_port: int = 162
     snmp_trap_community: str  = "public"
     snmp_trap_mib_modules: tuple = ('SNMPv2-MIB', 'SNMP-COMMUNITY-MIB', 'IF-MIB', 'LLDP-MIB')
@@ -35,5 +37,4 @@ class Settings(BaseSettings):
     log_filename: str = "/tmp/dataservice.log"
 
 settings = Settings()
-
 

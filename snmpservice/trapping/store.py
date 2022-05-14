@@ -87,7 +87,7 @@ class TrapDatastore:
             traps = self._data.get(str(device_id), False)
         return traps
     
-    async def store_trap(self, ip: str, new_trap: Trap) -> bool:
+    def store_trap(self, ip: str, new_trap: Trap) -> bool:
         """
         Stores a passed SNMP trap for device with device_id.
 
